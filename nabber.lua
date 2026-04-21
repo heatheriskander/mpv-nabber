@@ -59,6 +59,7 @@ local function nab()
 					mp.osd_message("oops", 3)
 				end
 			end)
+			start_time, end_time = nil, nil
 		end
 	})
 end
