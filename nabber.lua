@@ -14,7 +14,7 @@ local function nab()
 	end
 
 	if start_time > end_time then
-		mp.osd_message("girl how u tryna clip backwards", 3)
+		mp.osd_message("clip end must be after clip start", 3)
 		return
 	end
 
