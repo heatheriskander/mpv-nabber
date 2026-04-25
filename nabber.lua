@@ -41,6 +41,7 @@ local function nab()
 					"-i", file,
 					"-t", tostring(duration),
 					"-c:v", "libx264",
+					"-c:a", "aac",
 					"-ac", "2",
 					"-vf", "format=yuv420p",
 					out_path,
