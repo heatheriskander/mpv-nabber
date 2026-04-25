@@ -31,6 +31,7 @@ local function nab()
 				or (name:match("(.+)%..+") .. start_time .. "-" .. end_time)
 			local out_path = utils.join_path(out_dir, out_name .. ".mp4")
 
+			local old_start, old_end = start_time, end_time
 			mp.command_native_async({
 				name = "subprocess",
 				args = {
@@ -52,8 +53,11 @@ local function nab()
 				else
 					mp.osd_message("oops", 3)
 				end
+
+				if start_time == old_start and end_time == old_end then
+					start_time, end_time = nil, nil
+				end
 			end)
-			start_time, end_time = nil, nil
 		end
 	})
 end
