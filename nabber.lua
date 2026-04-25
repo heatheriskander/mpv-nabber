@@ -56,10 +56,29 @@ local function nab()
 
 				if start_time == old_start and end_time == old_end then
 					start_time, end_time = nil, nil
+					mp.set_property("ab-loop-a", "no")
+					mp.set_property("ab-loop-b", "no")
 				end
 			end)
 		end
 	})
+end
+
+local function toggle_preview()
+	if not start_time or not end_time then
+		mp.osd_message("set start and end points first", 3)
+		return
+	end
+	if mp.get_property("ab-loop-a") ~= "no" then
+		mp.osd_message("preview: off", 3)
+		mp.set_property("ab-loop-a", "no")
+		mp.set_property("ab-loop-b", "no")
+	else
+		mp.osd_message("preview: on", 3)
+		mp.set_property_number("ab-loop-a", start_time)
+		mp.set_property_number("ab-loop-b", end_time)
+		mp.commandv("seek", start_time, "absolute")
+	end
 end
 
 local function toggle_nabber()
@@ -67,18 +86,28 @@ local function toggle_nabber()
 		mp.add_forced_key_binding("i", "set-start", function()
 			start_time = mp.get_property_number("time-pos")
 			mp.osd_message("clip start: " .. start_time, 3)
+			if mp.get_property("ab-loop-a") ~= "no" then
+				mp.set_property_number("ab-loop-a", start_time)
+			end
 		end)
 		mp.add_forced_key_binding("o", "set-end", function()
 			end_time = mp.get_property_number("time-pos")
 			mp.osd_message("clip end: " .. end_time, 3)
+			if mp.get_property("ab-loop-b") ~= "no" then
+				mp.set_property_number("ab-loop-b", end_time)
+			end
 		end)
 		mp.add_forced_key_binding("p", "nab", nab)
+		mp.add_forced_key_binding("u", "toggle_preview", toggle_preview)
 		nabber_enabled = true
 		mp.osd_message("nabber: enabled")
 	else
 		mp.remove_key_binding("set-start")
 		mp.remove_key_binding("set-end")
 		mp.remove_key_binding("nab")
+		mp.remove_key_binding("toggle_preview")
+		mp.set_property("ab-loop-a", "no")
+		mp.set_property("ab-loop-b", "no")
 		nabber_enabled = false
 		mp.osd_message("nabber: disabled")
 	end
