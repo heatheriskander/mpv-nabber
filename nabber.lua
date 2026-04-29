@@ -44,6 +44,7 @@ local function nab()
 					"-c:a", "aac",
 					"-ac", "2",
 					"-vf", "format=yuv420p",
+					"-movflags", "faststart",
 					out_path,
 				},
 				capture_stdout = true,
